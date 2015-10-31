@@ -53,31 +53,50 @@ std::string file_stem(const std::string &path);
 
 /**
  * Read an array of floating-point numbers in double precision from a binary
- * file, where the numbers are stored as REAL numbers (it may represent a single
- * or a double precision).
+ * file.
  * @param filename - name of the binary file
- * @param n_cols - number of columns in the binary file (it represents an array
- * of values)
- * @param n_rows - based on the size of the binary file, size of a single value
- * and the number of columns, the number of rows is computed
- * @param values - an array of values in double precision. The array is
- * allocated in this function, so it has to be freed on the caller's end.
+ * @param n_values - number of values in the binary file
+ * @param values - an array of values in double precision
  */
-void read_binary(const std::string &filename, int n_cols, int &n_rows,
-                 double* &values);
+void read_binary(const std::string &filename, int n_values, double *values);
 
 /**
- * Write a VTS file (it's a VTK format for structured grid).
+ * Write a VTS file (it's a VTK format for structured grid) for 2D array in XY
+ * plane.
  * @param filename - name of the .vts file
- * @param n_cols - number of columns in the array of values to be written (can
- * be considered as the number of cells of the structured grid in x-direction)
- * @param n_rows - number of rows in the array of values to be written (can
- * be considered as the number of cells of the structured grid in y-direction)
+ * @param nx - number of cells of the grid in x-direction
+ * @param ny - number of cells of the grid in y-direction
  * @param h - the structured grid is supposed to be square, and this is the cell
  * size
  * @param values - the array of values to be written in the file
  */
-void write_vts(const std::string &filename, int n_cols, int n_rows, double h,
-               double *values);
+void write_vts_2D_XY(const std::string &filename, int nx, int ny, double h,
+                     double *values);
+
+/**
+ * Write a VTS file (it's a VTK format for structured grid) for 2D array in XZ
+ * plane.
+ * @param filename - name of the .vts file
+ * @param nx - number of cells of the grid in x-direction
+ * @param nz - number of cells of the grid in z-direction
+ * @param h - the structured grid is supposed to be square, and this is the cell
+ * size
+ * @param values - the array of values to be written in the file
+ */
+void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double h,
+                     double *values);
+
+/**
+ * Write a VTS file (it's a VTK format for structured grid) for 3D array.
+ * @param filename - name of the .vts file
+ * @param nx - number of cells of the grid in x-direction
+ * @param ny - number of cells of the grid in y-direction
+ * @param nz - number of cells of the grid in z-direction
+ * @param h - the structured grid is supposed to be square, and this is the cell
+ * size
+ * @param values - the array of values to be written in the file
+ */
+void write_vts_3D(const std::string &filename, int nx, int ny, int nz, double h,
+                  double *values);
 
 #endif // UTILITIES_HPP
