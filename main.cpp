@@ -45,74 +45,82 @@ int main(int argc, char **argv)
   double h = 1.0;
   string vtsfile = "";
 
-  int pos;
-  if (pos = argcheck(argc, argv, "-i"))
-    binfile = string(argv[pos+1]);
-  else throw runtime_error("Input binary file is not provided");
-
-  if (pos = argcheck(argc, argv, "-dim"))
-    dimension = atoi(argv[pos+1]);
-  else throw runtime_error("Dimension is not provided");
-  if (dimension != 2 || dimension != 3)
-    throw runtime_error("Dimension (" + d2s(dimension) + ") must be 2 or 3");
-
-  if (pos = argcheck(argc, argv, "-nx"))
-    nx = atoi(argv[pos+1]);
-  else throw runtime_error("n_values_x is not provided");
-  if (nx <= 0)
-    throw runtime_error("n_values_x (" + d2s(nx) + ") must be >0");
-
-  if (pos = argcheck(argc, argv, "-ny"))
+  try
   {
-    ny = atoi(argv[pos+1]);
-    if (ny <= 0)
-      throw runtime_error("n_values_y (" + d2s(ny) + ") must be >0");
-  }
+    int pos;
+    if (pos = argcheck(argc, argv, "-i"))
+      binfile = string(argv[pos+1]);
+    else throw runtime_error("Input binary file is not provided");
 
-  if (pos = argcheck(argc, argv, "-nz"))
-  {
-    nz = atoi(argv[pos+1]);
-    if (nz <= 0)
-      throw runtime_error("n_values_z (" + d2s(nz) + ") must be >0");
-  }
+    if (pos = argcheck(argc, argv, "-dim"))
+      dimension = atoi(argv[pos+1]);
+    else throw runtime_error("Dimension is not provided");
+    if (dimension != 2 && dimension != 3)
+      throw runtime_error("Dimension (" + d2s(dimension) + ") must be 2 or 3");
 
-  if (ny == 0 && nz == 0)
-    throw runtime_error("n_values_y or n_values_z must be provided");
+    if (pos = argcheck(argc, argv, "-nx"))
+      nx = atoi(argv[pos+1]);
+    else throw runtime_error("n_values_x (-nx) is not provided");
+    if (nx <= 0)
+      throw runtime_error("n_values_x (" + d2s(nx) + ") must be >0");
 
-  if (dimension == 3 && (ny == 0 || nz == 0))
-    throw runtime_error("For 3D n_values_y and n_values_z must be provided");
+    if (pos = argcheck(argc, argv, "-ny"))
+    {
+      ny = atoi(argv[pos+1]);
+      if (ny <= 0)
+        throw runtime_error("n_values_y (" + d2s(ny) + ") must be >0");
+    }
 
-  if (dimension == 2 && (ny != 0 && nz != 0))
-    throw runtime_error("For 2D n_values_y or n_values_z (not both) must be "
-                        "provided");
+    if (pos = argcheck(argc, argv, "-nz"))
+    {
+      nz = atoi(argv[pos+1]);
+      if (nz <= 0)
+        throw runtime_error("n_values_z (" + d2s(nz) + ") must be >0");
+    }
 
-  if (pos = argcheck(argc, argv, "-s"))
-    h = atof(argv[pos+1]);
+    if (ny == 0 && nz == 0)
+      throw runtime_error("n_values_y (-ny) or n_values_z (-nz) must be provided");
 
-  if (pos = argcheck(argc, argv, "-o"))
-    vtsfile = string(argv[pos+1]);
-  else
-    vtsfile = file_stem(binfile) + ".vts";
+    if (dimension == 3 && (ny == 0 || nz == 0))
+      throw runtime_error("For 3D n_values_y (-ny) and n_values_z (-nz) must be provided");
 
-  int n_values;
-  if (dimension == 3) n_values = nx*ny*nz;
-  else n_values = nx * (ny ? ny : nz);
+    if (dimension == 2 && (ny != 0 && nz != 0))
+      throw runtime_error("For 2D n_values_y (-ny) or n_values_z (-nz) (not both) must be provided");
 
-  double *values = new double[n_values];
+    if (pos = argcheck(argc, argv, "-s"))
+      h = atof(argv[pos+1]);
 
-  read_binary(binfile, n_values, values);
-
-  if (dimension == 2)
-  {
-    if (ny)
-      write_vts_2D_XY(vtsfile, nx, ny, h, values);
+    if (pos = argcheck(argc, argv, "-o"))
+      vtsfile = string(argv[pos+1]);
     else
-      write_vts_2D_XZ(vtsfile, nx, nz, h, values);
+      vtsfile = file_stem(binfile) + ".vts";
+
+    int n_values;
+    if (dimension == 3) n_values = nx*ny*nz;
+    else n_values = nx * (ny ? ny : nz);
+
+    double *values = new double[n_values];
+
+    read_binary(binfile, n_values, values);
+
+    if (dimension == 2)
+    {
+      if (ny)
+        write_vts_2D_XY(vtsfile, nx, ny, h, values);
+      else
+        write_vts_2D_XZ(vtsfile, nx, nz, h, values);
+    }
+    else
+      write_vts_3D(vtsfile, nx, ny, nz, h, values);
+
+    delete[] values;
   }
-  else
-    write_vts_3D(vtsfile, nx, ny, nz, h, values);
-
-  delete[] values;
-
-  return 0;
+  catch (const std::exception& e)
+  {
+    cout << "\n" << e.what() << "\n" << endl;
+  }
+  catch (...)
+  {
+    cout << "\nUnknown exception!\n" << endl;
+  }
 }
