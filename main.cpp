@@ -25,7 +25,9 @@ int main(int argc, char **argv)
             " -nx n_values_x "
             "[-ny n_values_y"
             " -nz n_values_z"
-            " -s cell_size"
+            " -sx cell_size_x"
+            " -sy cell_size_y"
+            " -sz cell_size_z"
             " -o output_file]\n"
             "\nwhere\n"
             "input_file = input binary file\n"
@@ -33,7 +35,9 @@ int main(int argc, char **argv)
             "n_values_x = number of values along x-direction\n"
             "n_values_y = number of values along y-direction\n"
             "n_values_z = number of values along z-direction (for 3D or for 2D in XZ plane)\n"
-            "cell_size = size of a cell of a structured grid (1 m by default)\n"
+            "cell_size_x = size of a cell of a structured grid along x-direction (1 m by default)\n"
+            "cell_size_y = size of a cell of a structured grid along y-direction (1 m by default)\n"
+            "cell_size_z = size of a cell of a structured grid along z-direction (1 m by default)\n"
             "output_file = VTS file named stem(input_file)+'.vts' by default\n";
     cout << endl;
     return 1;
@@ -42,7 +46,7 @@ int main(int argc, char **argv)
   string binfile = "";
   int dimension = 0;
   int nx = 0, ny = 0, nz = 0;
-  double h = 1.0;
+  double hx = 1.0, hy = 1.0, hz = 1.0;
   string vtsfile = "";
 
   try
@@ -87,8 +91,14 @@ int main(int argc, char **argv)
     if (dimension == 2 && (ny != 0 && nz != 0))
       throw runtime_error("For 2D n_values_y (-ny) or n_values_z (-nz) (not both) must be provided");
 
-    if (pos = argcheck(argc, argv, "-s"))
-      h = atof(argv[pos+1]);
+    if (pos = argcheck(argc, argv, "-sx"))
+      hx = atof(argv[pos+1]);
+
+    if (pos = argcheck(argc, argv, "-sy"))
+      hy = atof(argv[pos+1]);
+
+    if (pos = argcheck(argc, argv, "-sz"))
+      hz = atof(argv[pos+1]);
 
     if (pos = argcheck(argc, argv, "-o"))
       vtsfile = string(argv[pos+1]);
@@ -106,12 +116,12 @@ int main(int argc, char **argv)
     if (dimension == 2)
     {
       if (ny)
-        write_vts_2D_XY(vtsfile, nx, ny, h, values);
+        write_vts_2D_XY(vtsfile, nx, ny, hx, hy, values);
       else
-        write_vts_2D_XZ(vtsfile, nx, nz, h, values);
+        write_vts_2D_XZ(vtsfile, nx, nz, hx, hz, values);
     }
     else
-      write_vts_3D(vtsfile, nx, ny, nz, h, values);
+      write_vts_3D(vtsfile, nx, ny, nz, hx, hy, hz, values);
 
     delete[] values;
   }

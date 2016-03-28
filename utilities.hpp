@@ -66,12 +66,13 @@ void read_binary(const std::string &filename, int n_values, double *values);
  * @param filename - name of the .vts file
  * @param nx - number of cells of the grid in x-direction
  * @param ny - number of cells of the grid in y-direction
- * @param h - the structured grid is supposed to be square, and this is the cell
+ * @param hx - the size of a structured cell in x-direction
+ * @param hy - the size of a structured cell in y-direction
  * size
  * @param values - the array of values to be written in the file
  */
-void write_vts_2D_XY(const std::string &filename, int nx, int ny, double h,
-                     double *values);
+void write_vts_2D_XY(const std::string &filename, int nx, int ny, double hx,
+                     double hy, double *values);
 
 /**
  * Write a VTS file (it's a VTK format for structured grid) for 2D array in XZ
@@ -79,12 +80,13 @@ void write_vts_2D_XY(const std::string &filename, int nx, int ny, double h,
  * @param filename - name of the .vts file
  * @param nx - number of cells of the grid in x-direction
  * @param nz - number of cells of the grid in z-direction
- * @param h - the structured grid is supposed to be square, and this is the cell
+ * @param hx - the size of a structured cell in x-direction
+ * @param hz - the size of a structured cell in z-direction
  * size
  * @param values - the array of values to be written in the file
  */
-void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double h,
-                     double *values);
+void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double hx,
+                     double hz, double *values);
 
 /**
  * Write a VTS file (it's a VTK format for structured grid) for 3D array.
@@ -92,11 +94,12 @@ void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double h,
  * @param nx - number of cells of the grid in x-direction
  * @param ny - number of cells of the grid in y-direction
  * @param nz - number of cells of the grid in z-direction
- * @param h - the structured grid is supposed to be square, and this is the cell
- * size
+ * @param hx - the size of a structured cell in x-direction
+ * @param hy - the size of a structured cell in y-direction
+ * @param hz - the size of a structured cell in z-direction
  * @param values - the array of values to be written in the file
  */
-void write_vts_3D(const std::string &filename, int nx, int ny, int nz, double h,
-                  double *values);
+void write_vts_3D(const std::string &filename, int nx, int ny, int nz,
+                  double hx, double hy, double hz, double *values);
 
 #endif // UTILITIES_HPP

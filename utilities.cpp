@@ -82,8 +82,8 @@ void read_binary(const std::string &filename, int n_values, double *values)
 
 
 
-void write_vts_2D_XY(const std::string &filename, int nx, int ny, double h,
-                     double *values)
+void write_vts_2D_XY(const std::string &filename, int nx, int ny, double hx,
+                     double hy, double *values)
 {
   std::ofstream out(filename.c_str());
   if (!out)
@@ -108,10 +108,10 @@ void write_vts_2D_XY(const std::string &filename, int nx, int ny, double h,
 
   for (int i = 0; i < ny+1; ++i)
   {
-    const double y = i*h;
+    const double y = i*hy;
     for (int j = 0; j < nx+1; ++j)
     {
-      const double x = j*h;
+      const double x = j*hx;
       out << x << " " << y << " 0.0 ";
     }
   }
@@ -126,8 +126,8 @@ void write_vts_2D_XY(const std::string &filename, int nx, int ny, double h,
 
 
 
-void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double h,
-                     double *values)
+void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double hx,
+                     double hz, double *values)
 {
   std::ofstream out(filename.c_str());
   if (!out)
@@ -152,10 +152,10 @@ void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double h,
 
   for (int i = 0; i < nz+1; ++i)
   {
-    const double z = i*h;
+    const double z = i*hz;
     for (int j = 0; j < nx+1; ++j)
     {
-      const double x = j*h;
+      const double x = j*hx;
       out << x << " 0.0 " << z << " ";
     }
   }
@@ -170,8 +170,8 @@ void write_vts_2D_XZ(const std::string &filename, int nx, int nz, double h,
 
 
 
-void write_vts_3D(const std::string &filename, int nx, int ny, int nz, double h,
-                     double *values)
+void write_vts_3D(const std::string &filename, int nx, int ny, int nz,
+                  double hx, double hy, double hz, double *values)
 {
   std::ofstream out(filename.c_str());
   if (!out)
@@ -197,13 +197,13 @@ void write_vts_3D(const std::string &filename, int nx, int ny, int nz, double h,
 
   for (int iz = 0; iz < nz+1; ++iz)
   {
-    const double z = iz*h;
+    const double z = iz*hz;
     for (int iy = 0; iy < ny+1; ++iy)
     {
-      const double y = iy*h;
+      const double y = iy*hy;
       for (int ix = 0; ix < nx+1; ++ix)
       {
-        const double x = ix*h;
+        const double x = ix*hx;
         out << x << " " << y << " " << z << " ";
       }
     }
